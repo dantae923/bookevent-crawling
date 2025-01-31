@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>검색 결과</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            text-align: center;
+            padding: 10px;
+        }
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+        td img {
+            max-width: 100px;
+            height: auto;
+            border-radius: 5px;
+        }
+        a {
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .back-btn {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .back-btn a {
+            text-decoration: none;
+            color: #fff;
+            background-color: #007BFF;
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+        .back-btn a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>검색 결과: "{{ query }}"</h1>
+    {% if events %}
+    <table>
+        <thead>
+            <tr>
+                <th>사이트명</th>
+                <th>행사명</th>
+                <th>행사 기간</th>
+                <th>행사 링크</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for event in events %}
+            <tr>
+                <td>{{ event.site }}</td> <!-- 동적 사이트명 -->
+                <td>{{ event.title }}</td> <!-- 행사명 -->
+                <td>{{ event.period }}</td> <!-- 행사 기간 -->
+                <td><a href="{{ event.link }}" target="_blank">이동</a></td> <!-- 행사 링크 -->
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="text-align: center;">검색 결과가 없습니다.</p>
+    {% endif %}
+    <div class="back-btn">
+        <a href="/">다시 검색</a>
+    </div>
+</body>
+</html>
