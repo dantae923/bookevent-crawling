@@ -1,15 +1,15 @@
+import requests
+import time
+from bs4 import BeautifulSoup
 from datetime import datetime
 from doctest import REPORT_CDIFF
 from flask import Flask, render_template, request
-import requests
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time
 
 app = Flask(__name__)
 
@@ -92,7 +92,7 @@ def crawl_kyobo_event_details(search_query):
 
     # Selenium WebDriver 설정
     # ChromeDriver 경로
-    service = Service("D:/YoungJune/Projects/chromedriver-win64/chromedriver.exe")
+    service = Service("C:/Users/Dantae/chromedriver-win64/chromedriver.exe")
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(url)
 
@@ -124,7 +124,7 @@ def crawl_kyobo_event_details(search_query):
         data = []
         # 이벤트 태그 선택
         items = soup.select('a.event_link')  # <a> 태그와 클래스 선택
-        print(f"선택된 이벤트 수: {len(items)}")
+        #print(f"선택된 이벤트 수: {len(items)}")
         for item in items:
             link = item.get('href', '#')
             link = f"https://event.kyobobook.co.kr{link}" if link.startswith(
@@ -145,7 +145,7 @@ def crawl_kyobo_event_details(search_query):
                     'period': period
                 })
 
-        print(data)
+        #print(data)
         return data
     except Exception as e:
         print(f"교보문고 크롤링 중 오류 발생: {e}")
@@ -220,18 +220,22 @@ def crawl_animate_event_details(search_query):
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
-        # print(response.text)
+        #save_to_file(soup.prettify(), "D:/YoungJune/Projects/bookevent-crawling/log/html_log.txt")
         data = []
         items = soup.select('a[href^="../goods/goods_view.php?goodsNo="]')
         
-        # 숨겨진 중복 데이터 삭제
-        filtered_items = [
-    item for item in items
-    if not any(keyword in item.get("style", "").lower() for keyword in ["visibility: hidden", "display: none"])
-]
+        # 중복 데이터 삭제
+        seen_links = set()
+
         # print(items)
-        for item in filtered_items:
+        for item in items:
             link_tag = item.get('href', '#')
+            #print(link_tag)
+            if link_tag in seen_links:
+                continue
+
+            seen_links.add(link_tag)
+
             link = "https://www.animate-onlineshop.co.kr" + link_tag[2:] if link_tag.startswith("..") else "https://www.animate-onlineshop.co.kr" + link
             image_tag = item.select_one('img')
             image = image_tag.get('src') if image_tag else "이미지 없음"
@@ -244,7 +248,7 @@ def crawl_animate_event_details(search_query):
                     'link': link,
                     'image': image
                 })
-
+        
         return data
     except Exception as e:
         print(f"크롤링 중 오류 발생: {e}")

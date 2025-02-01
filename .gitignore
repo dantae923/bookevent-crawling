@@ -6,6 +6,7 @@ __pycache__/
 
 # 로그 파일 무시
 *.log
+log/
 
 # IDE 설정 파일 무시
 .vscode/
