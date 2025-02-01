@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 def crawl_yes24_event_details(search_query):
     start_time = datetime.now()
-    print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] yes24 크롤링 시작")
+    print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] 예스24 크롤링 시작")
     url = f"https://event.yes24.com/main?pageNumber=1&pageSize=30&rank=Y&query={search_query}&sortTp=03"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101 Firefox/102.0"
@@ -45,7 +45,7 @@ def crawl_yes24_event_details(search_query):
 
             if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
                 data.append({
-                    'site': 'yes24',
+                    'site': '예스24',
                     'title': title,
                     'link': f"https://event.yes24.com{link}" if link.startswith("/") else link,
                     'image': image,
@@ -58,7 +58,7 @@ def crawl_yes24_event_details(search_query):
         return []
     finally:
         end_time = datetime.now()
-        print(f"[{end_time.strftime('%Y-%m-%d %H:%M:%S')}] yes24 크롤링 종료")
+        print(f"[{end_time.strftime('%Y-%m-%d %H:%M:%S')}] 예스24 크롤링 종료")
         print(f"실행 시간: {end_time - start_time}")
 
 # 교보문고
@@ -92,7 +92,7 @@ def crawl_kyobo_event_details(search_query):
 
     # Selenium WebDriver 설정
     # ChromeDriver 경로
-    service = Service("C:/Users/Dantae/chromedriver-win64/chromedriver.exe")
+    service = Service("D:/YoungJune/Projects/chromedriver-win64/chromedriver.exe")
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(url)
 
@@ -205,12 +205,63 @@ def crawl_aladin_event_details(search_query):
         print(f"[{end_time.strftime('%Y-%m-%d %H:%M:%S')}] 알라딘 크롤링 종료")
         print(f"실행 시간: {end_time - start_time}")
 
+# 애니메이트
 
+
+def crawl_animate_event_details(search_query):
+    start_time = datetime.now()
+    print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] 애니메이트 크롤링 시작")
+    url = f"https://www.animate-onlineshop.co.kr/goods/goods_search.php?keyword={search_query}"
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101 Firefox/102.0"
+    }
+
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.text, 'html.parser')
+        # print(response.text)
+        data = []
+        items = soup.select('a[href^="../goods/goods_view.php?goodsNo="]')
+        
+        # 숨겨진 중복 데이터 삭제
+        filtered_items = [
+    item for item in items
+    if not any(keyword in item.get("style", "").lower() for keyword in ["visibility: hidden", "display: none"])
+]
+        # print(items)
+        for item in filtered_items:
+            link_tag = item.get('href', '#')
+            link = "https://www.animate-onlineshop.co.kr" + link_tag[2:] if link_tag.startswith("..") else "https://www.animate-onlineshop.co.kr" + link
+            image_tag = item.select_one('img')
+            image = image_tag.get('src') if image_tag else "이미지 없음"
+            title = image_tag.get('alt') if image_tag else "제목 없음"
+
+            if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
+                data.append({
+                    'site': '애니메이트',
+                    'title': title,
+                    'link': link,
+                    'image': image
+                })
+
+        return data
+    except Exception as e:
+        print(f"크롤링 중 오류 발생: {e}")
+        return []
+    finally:
+        end_time = datetime.now()
+        print(f"[{end_time.strftime('%Y-%m-%d %H:%M:%S')}] 애니메이트 크롤링 종료")
+        print(f"실행 시간: {end_time - start_time}")
+
+
+# 모든 사이트 크롤링
 def crawl_all_events(search_query):
     yes24_data = crawl_yes24_event_details(search_query)
     kyobo_data = crawl_kyobo_event_details(search_query)
     aladin_data = crawl_aladin_event_details(search_query)
-    return yes24_data + kyobo_data + aladin_data
+    animate_data = crawl_animate_event_details(search_query)
+    return yes24_data + kyobo_data + aladin_data + animate_data
 
 
 def save_to_file(content, filename="C:/Users/Dantae/log_output.txt"):
