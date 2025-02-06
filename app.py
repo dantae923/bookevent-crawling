@@ -10,6 +10,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import os
 
 app = Flask(__name__)
 
@@ -92,7 +93,9 @@ def crawl_kyobo_event_details(search_query):
 
     # Selenium WebDriver 설정
     # ChromeDriver 경로
-    service = Service("C:/Users/Dantae/chromedriver-win64/chromedriver.exe")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    driver_path = os.path.join(base_dir, "drivers", "chromedriver.exe")
+    service = Service(driver_path)
     driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get(url)
 
