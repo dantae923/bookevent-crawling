@@ -6,3 +6,4 @@
 1. python venv 가상화 환경 세팅
 2. requirements.txt에 있는 라이브러리 설치
 3. 크롬드라이버 설치 및 경로에 맞게 소스 수정(다운로드 링크: https://googlechromelabs.github.io/chrome-for-testing/)
+   -> 크롬드라이버 경로 drivers 폴더 밑으로 고정되도록 수정
