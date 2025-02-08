@@ -287,7 +287,18 @@ def save_to_file(content, filename="C:/Users/Dantae/log_output.txt"):
 def home():
     if request.method == 'POST':
         search_query = request.form.get('search_query', '').strip()
-        events = crawl_all_events(search_query)
+        selected_sites = request.form.getlist('sites')
+
+        events = [] #crawl_all_events(search_query)
+        if "yes24" in selected_sites:
+            events += crawl_yes24_event_details(search_query)
+        if "kyobo" in selected_sites:
+            events += crawl_kyobo_event_details(search_query)
+        if "aladin" in selected_sites:
+            events += crawl_aladin_event_details(search_query)
+        if "animate" in selected_sites:
+            events += crawl_animate_event_details(search_query)
+
         return render_template('index.html', events=events, query=search_query)
     return render_template('search.html')
 

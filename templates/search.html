@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,6 +26,18 @@
         border: 1px solid #ccc;
         border-radius: 5px;
       }
+      .site-options {
+        text-align: left;
+        margin-bottom: 15px;
+      }
+      .site-options label {
+        display: block;
+        margin: 5px 0;
+        font-size: 14px;
+      }
+      .site-options input[type="checkbox"] {
+        margin-right: 5px;
+      }
       button {
         padding: 10px 20px;
         font-size: 16px;
@@ -39,16 +51,64 @@
         background-color: #0056b3;
       }
     </style>
+    <script>
+      function toggleAllSites(source){
+        let checkboxes = document.querySelectorAll('.site-checkbox');
+        checkboxes.forEach((checkbox) => {
+          checkbox.checked = source.checked;
+        });
+      }
+
+      function checkAllSelected(){
+        let allCheckbox = document.getElementById("select-all");
+        let checkboxes = document.querySelectorAll('.site-checkbox');
+        let allChecked = true;
+        checkboxes.forEach((checkbox) => {
+          if (!checkbox.checked){
+            allChecked = false;
+          }
+        });
+        allCheckbox.checked = allChecked;
+      }
+    </script>
   </head>
   <body>
     <h1>도서명 검색</h1>
     <form method="POST" action="/">
+      <!-- 검색어 입력 필드 -->
       <input
         type="text"
         name="search_query"
         placeholder="검색어를 입력하세요"
         required
       />
+
+      <!-- 크롤링할 사이트 선택 영역 -->
+      <div class="site-options">
+        <p>원하는 사이트를 선택하세요:</p>
+        <label>
+          <input type="checkbox" id="select-all" onclick="toggleAllSites(this)" />
+          전체
+        </label>
+        <label>
+          <input type="checkbox" name="sites" value="yes24" class="site-checkbox" onclick="checkAllSelected()" />
+          예스24
+        </label>
+        <label>
+          <input type="checkbox" name="sites" value="kyobo" class="site-checkbox" onclick="checkAllSelected()" />
+          교보문고
+        </label>
+        <label>
+          <input type="checkbox" name="sites" value="aladin" class="site-checkbox" onclick="checkAllSelected()" />
+          알라딘
+        </label>
+        <label>
+          <input type="checkbox" name="sites" value="animate" class="site-checkbox" onclick="checkAllSelected()" />
+          애니메이트
+        </label>
+      </div>
+
+      <!-- 검색 버튼 -->
       <button type="submit">검색</button>
     </form>
   </body>
