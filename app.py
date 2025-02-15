@@ -1,8 +1,8 @@
-import requests
+import os
 import time
+import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
-from doctest import REPORT_CDIFF
 from flask import Flask, render_template, request
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -10,14 +10,12 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import os
 
 app = Flask(__name__)
 
 # 크롤링 함수
+
 # yes24
-
-
 def crawl_yes24_event_details(search_query):
     start_time = datetime.now()
     print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] 예스24 크롤링 시작")
@@ -30,12 +28,13 @@ def crawl_yes24_event_details(search_query):
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
-        # print(response.text)
         data = []
         items = soup.select('a[onclick^="setEWCode"]')
-        # print(items)
+
         for item in items:
-            link = item.get('href', '#')
+            link_tag = item.get('href', '#')
+            link = f"https://event.yes24.com{link_tag}" if link_tag.startswith(
+                "/") else link_tag
             title_tag = item.select_one('span.txt_tit')
             title = title_tag.text.strip() if title_tag else "제목 없음"
             image_tag = item.select_one('img')
@@ -47,8 +46,8 @@ def crawl_yes24_event_details(search_query):
             if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
                 data.append({
                     'site': '예스24',
+                    'link': link,
                     'title': title,
-                    'link': f"https://event.yes24.com{link}" if link.startswith("/") else link,
                     'image': image,
                     'period': period
                 })
@@ -63,8 +62,6 @@ def crawl_yes24_event_details(search_query):
         print(f"실행 시간: {end_time - start_time}")
 
 # 교보문고
-
-
 def crawl_kyobo_event_details(search_query):
     start_time = datetime.now()
     print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] 교보문고 크롤링 시작")
@@ -80,7 +77,6 @@ def crawl_kyobo_event_details(search_query):
     chrome_options.add_argument("--disable-dev-shm-usage")  # 메모리 부족 방지
     chrome_options.add_argument(
         "--disable-blink-features=AutomationControlled")  # 자동화 탐지 방지
-    # chrome_options.add_argument("--window-size=1920x1080")  # 화면 크기 고정
 
     # 불필요한 리소스 로드 차단 (이미지, CSS)
     prefs = {
@@ -121,17 +117,13 @@ def crawl_kyobo_event_details(search_query):
         # BeautifulSoup으로 HTML 파싱
         html = driver.page_source
         soup = BeautifulSoup(html, 'html.parser')
-        # HTML 저장 (디버깅용)
-        # save_to_file(soup.prettify(), "C:/Users/Dantae/html_log.txt")
-
         data = []
-        # 이벤트 태그 선택
         items = soup.select('a.event_link')  # <a> 태그와 클래스 선택
-        #print(f"선택된 이벤트 수: {len(items)}")
+
         for item in items:
-            link = item.get('href', '#')
-            link = f"https://event.kyobobook.co.kr{link}" if link.startswith(
-                "/") else link
+            link_tag = item.get('href', '#')
+            link = f"https://event.kyobobook.co.kr{link_tag}" if link_tag.startswith(
+                "/") else link_tag
             title_tag = item.select_one('div.event_name')
             title = title_tag.text.strip() if title_tag else "제목 없음"
             image_tag = item.select_one('img')
@@ -142,13 +134,12 @@ def crawl_kyobo_event_details(search_query):
             if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
                 data.append({
                     'site': '교보문고',
-                    'title': title,
                     'link': link,
+                    'title': title,
                     'image': image,
                     'period': period
                 })
 
-        #print(data)
         return data
     except Exception as e:
         print(f"교보문고 크롤링 중 오류 발생: {e}")
@@ -160,8 +151,6 @@ def crawl_kyobo_event_details(search_query):
         print(f"실행 시간: {end_time - start_time}")
 
 # 알라딘
-
-
 def crawl_aladin_event_details(search_query):
     start_time = datetime.now()
     print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] 알라딘 크롤링 시작")
@@ -173,12 +162,10 @@ def crawl_aladin_event_details(search_query):
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
-        # print(response.text)
         soup = BeautifulSoup(response.text, 'html.parser')
-
         data = []
         items = soup.select('table#Table1 tr')
-        # print(items)
+
         for item in items:
             link_tag = item.select_one("a.ml")
             link = "https://www.aladin.co.kr" + \
@@ -193,8 +180,8 @@ def crawl_aladin_event_details(search_query):
             if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
                 data.append({
                     'site': '알라딘',
-                    'title': title,
                     'link': link,
+                    'title': title,
                     'image': image,
                     'period': period
                 })
@@ -209,8 +196,6 @@ def crawl_aladin_event_details(search_query):
         print(f"실행 시간: {end_time - start_time}")
 
 # 애니메이트
-
-
 def crawl_animate_event_details(search_query):
     start_time = datetime.now()
     print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] 애니메이트 크롤링 시작")
@@ -223,23 +208,21 @@ def crawl_animate_event_details(search_query):
         response = requests.get(url, headers=headers)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
-        #save_to_file(soup.prettify(), "D:/YoungJune/Projects/bookevent-crawling/log/html_log.txt")
         data = []
         items = soup.select('a[href^="../goods/goods_view.php?goodsNo="]')
         
         # 중복 데이터 삭제
         seen_links = set()
 
-        # print(items)
         for item in items:
             link_tag = item.get('href', '#')
-            #print(link_tag)
+
             if link_tag in seen_links:
                 continue
 
             seen_links.add(link_tag)
-
-            link = "https://www.animate-onlineshop.co.kr" + link_tag[2:] if link_tag.startswith("..") else "https://www.animate-onlineshop.co.kr" + link
+            link = "https://www.animate-onlineshop.co.kr" + link_tag[2:] if link_tag.startswith(
+                "..") else "https://www.animate-onlineshop.co.kr" + link
             image_tag = item.select_one('img')
             image = image_tag.get('src') if image_tag else "이미지 없음"
             title = image_tag.get('alt') if image_tag else "제목 없음"
@@ -247,8 +230,8 @@ def crawl_animate_event_details(search_query):
             if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
                 data.append({
                     'site': '애니메이트',
-                    'title': title,
                     'link': link,
+                    'title': title,
                     'image': image
                 })
         
@@ -262,7 +245,6 @@ def crawl_animate_event_details(search_query):
         print(f"실행 시간: {end_time - start_time}")
 
 # 대원씨아이
-
 def crawl_daewon_event_details(search_query):
     start_time = datetime.now()
     print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] 대원씨아이 크롤링 시작")
@@ -274,22 +256,16 @@ def crawl_daewon_event_details(search_query):
     try:
         response = requests.get(url, headers=headers)
         response.raise_for_status()
-        # print(response.text)
         soup = BeautifulSoup(response.text, 'html.parser')
-
         data = []
         items = soup.select('div.name a')
-        #print(items)
+
         for item in items:
             link_tag = item.get('href', '#')
             link = f"https://dwcishop.co.kr/{link_tag}" if link_tag.startswith(
                 "/") else link_tag
-            #print(item)
-            #title_tag = item.select_one('span:last-child')
-            spans = item.find_all("span")
-            title = spans[-1].text.strip() if spans else "제목 없음"
-            #print(title)
-            #title = title_tag.text.strip() if title_tag else "제목 없음"
+            title_tag = item.find_all("span")
+            title = title_tag[-1].text.strip() if title_tag else "제목 없음"
             image_tag = item.select_one('img')
             image = image_tag["src"] if image_tag else "이미지 없음"
             period_tag = item.select_one('span.date')
@@ -298,12 +274,12 @@ def crawl_daewon_event_details(search_query):
             if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
                 data.append({
                     'site': '대원씨아이',
-                    'title': title,
                     'link': link,
+                    'title': title,
                     'image': image,
                     'period': period
                 })
-            #print(data)
+
         return data
     except Exception as e:
         print(f"크롤링 중 오류 발생: {e}")
@@ -322,7 +298,7 @@ def crawl_all_events(search_query):
     animate_data = crawl_animate_event_details(search_query)
     return yes24_data + kyobo_data + aladin_data + animate_data
 
-
+# 로그 파일 저장
 def save_to_file(content, filename="C:/Users/Dantae/log_output.txt"):
     try:
         with open(filename, "a", encoding="utf-8") as file:  # "a" 모드는 파일에 내용을 추가
@@ -333,15 +309,13 @@ def save_to_file(content, filename="C:/Users/Dantae/log_output.txt"):
 
 
 # 검색 페이지
-
-
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
         search_query = request.form.get('search_query', '').strip()
         selected_sites = request.form.getlist('sites')
 
-        events = [] #crawl_all_events(search_query)
+        events = []
         if "yes24" in selected_sites:
             events += crawl_yes24_event_details(search_query)
         if "kyobo" in selected_sites:
