@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 
-def crawl_aladin_event_details(search_query):
+def crawl_comicgallery_event_details(search_query):
     start_time = datetime.now()
     print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] 알라딘 크롤링 시작")
     url = "https://www.aladin.co.kr/events/wevent_sub.aspx?CID=2551"

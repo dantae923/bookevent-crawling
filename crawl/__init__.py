@@ -5,6 +5,8 @@ from .animate import crawl_animate_event_details
 from .daewon import crawl_daewon_event_details
 from .comiccity import crawl_comiccity_event_details
 from .bookculture import crawl_bookculture_event_details
+from .comicgallery import crawl_comicgallery_event_details
+from .comiczone import crawl_comiczone_event_details
 
 def crawl_all_events(search_query, selected_sites):
         events = []
@@ -23,5 +25,9 @@ def crawl_all_events(search_query, selected_sites):
             events += crawl_comiccity_event_details(search_query)
         if "bookculture" in selected_sites:
             events += crawl_bookculture_event_details(search_query)
+        if "comicgallery" in selected_sites:
+            events += crawl_comicgallery_event_details(search_query)
+        if "comiczone" in selected_sites:
+            events += crawl_comiczone_event_details(search_query)
 
         return events
