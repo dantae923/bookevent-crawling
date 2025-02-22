@@ -15,16 +15,20 @@ def crawl_comiccity_event_details(search_query):
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         data = []
-        items = soup.select('div.box')
+        items = soup.select('div[class="box"]')
 
         for item in items:
-            link_tag = item.select_one('p.name a')
-            link = link_tag.get('href', '#')
-            title = link_tag.text.strip() if link_tag else "제목 없음"
+            link_title_tag = item.select_one('p.name a')
+            link = link_title_tag.get('href', '#')
+            title = link_title_tag.text.strip() if link_title_tag else "제목 없음"
             image_tag = item.select_one('div.prdimg img')
             image = image_tag["src"] if image_tag else "이미지 없음"
 
-            if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", "") and '특전' in title.replace(" ", ""):
+            # 행사 상품만 추려냄
+            special_keywords = ["예약", "특전", "한정"]
+            is_special = any(keyword in title for keyword in special_keywords)
+
+            if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", "") and is_special:
                 data.append({
                     'site': '코믹시티',
                     'link': link,
