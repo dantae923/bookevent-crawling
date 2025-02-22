@@ -15,26 +15,26 @@ def crawl_comicgallery_event_details(search_query):
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         data = []
-        items = soup.select('table#Table1 tr')
+        items = soup.select('div.thumbnail')
 
         for item in items:
-            link_tag = item.select_one("a.ml")
-            link = "https://www.aladin.co.kr" + \
+            link_tag = item.select_one("a[href^='/product/detail.html']")
+            link = "https://comicgallery.co.kr/" + \
                 link_tag["href"] if link_tag else "#"
-            title_tag = item.select_one('a.ml h3')
-            title = title_tag.text.strip() if title_tag else "제목 없음"
-            image_tag = item.select_one('img')
-            image = image_tag["src"] if image_tag else "이미지 없음"
-            period_tag = item.select_one('span.date')
-            period = period_tag.text.strip() if period_tag else "기간 정보 없음"
+            title_image_tag = item.select_one('img')
+            title = title_image_tag["alt"] if title_image_tag else "제목 없음"
+            image = title_image_tag["src"] if title_image_tag else "이미지 없음"
 
-            if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
+            # 행사 상품만 추려냄
+            special_keywords = ["예약", "특전", "한정", "사은", "이벤트", "증정"]
+            is_special = any(keyword in title for keyword in special_keywords)
+
+            if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", "") and is_special:
                 data.append({
                     'site': '코믹갤러리',
                     'link': link,
                     'title': title,
-                    'image': image,
-                    'period': period
+                    'image': image
                 })
 
         return data
