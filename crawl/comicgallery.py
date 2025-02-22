@@ -4,8 +4,8 @@ from datetime import datetime
 
 def crawl_comicgallery_event_details(search_query):
     start_time = datetime.now()
-    print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] 알라딘 크롤링 시작")
-    url = "https://www.aladin.co.kr/events/wevent_sub.aspx?CID=2551"
+    print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] 코믹갤러리 크롤링 시작")
+    url = f"https://www.comicgallery.co.kr/product/search.html?banner_action=&keyword={search_query}"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101 Firefox/102.0"
     }
@@ -30,7 +30,7 @@ def crawl_comicgallery_event_details(search_query):
 
             if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
                 data.append({
-                    'site': '알라딘',
+                    'site': '코믹갤러리',
                     'link': link,
                     'title': title,
                     'image': image,
@@ -43,5 +43,5 @@ def crawl_comicgallery_event_details(search_query):
         return []
     finally:
         end_time = datetime.now()
-        print(f"[{end_time.strftime('%Y-%m-%d %H:%M:%S')}] 알라딘 크롤링 종료")
+        print(f"[{end_time.strftime('%Y-%m-%d %H:%M:%S')}] 코믹갤러리 크롤링 종료")
         print(f"실행 시간: {end_time - start_time}")

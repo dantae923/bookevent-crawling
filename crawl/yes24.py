@@ -15,7 +15,7 @@ def crawl_yes24_event_details(search_query):
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         data = []
-        items = soup.select('a[onclick^="setEWCode"]')
+        items = soup.select('a[onclick^="setEWCode(\'007_001\')"]')
 
         for item in items:
             link_tag = item.get('href', '#')
