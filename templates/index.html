@@ -66,6 +66,7 @@
             <tr>
                 <th>사이트명</th>
                 <th>행사명</th>
+                <th>사이트 이미지</th>
                 <th>행사 기간</th>
                 <th>행사 링크</th>
             </tr>
@@ -75,6 +76,7 @@
             <tr>
                 <td>{{ event.site }}</td> <!-- 동적 사이트명 -->
                 <td>{{ event.title }}</td> <!-- 행사명 -->
+                <td><img src="{{ event.image }}" alt="사이트 이미지"></td> <!-- 이미지 -->
                 <td>{{ event.period }}</td> <!-- 행사 기간 -->
                 <td><a href="{{ event.link }}" target="_blank">이동</a></td> <!-- 행사 링크 -->
             </tr>
