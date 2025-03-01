@@ -10,10 +10,36 @@
             margin: 20px;
             background-color: #f9f9f9;
         }
+        /* ✅ 테이블과 정렬을 맞추기 위해 margin-left 적용 */
+        .container {
+            max-width: 800px;  /* 테이블과 일관성 유지 */
+            margin: 0 auto;
+            text-align: left;  /* 좌측 정렬 */
+        }
+        /* ✅ 홈 버튼과 제목을 같은 줄에 배치 */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* 버튼과 제목을 양쪽으로 배치 */
+            margin-bottom: 20px;
+        }
         h1 {
             color: #333;
             text-align: center;
             margin-bottom: 20px;
+        }
+        .home-btn {
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .home-btn:hover {
+            background-color: #0056b3;
         }
         table {
             width: 100%;
@@ -59,35 +85,42 @@
     </style>
 </head>
 <body>
-    <h1>검색 결과: "{{ query }}"</h1>
-    {% if events %}
-    <table>
-        <thead>
-            <tr>
-                <th>사이트명</th>
-                <th>행사명</th>
-                <th>사이트 이미지</th>
-                <th>행사 기간</th>
-                <th>행사 링크</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for event in events %}
-            <tr>
-                <td>{{ event.site }}</td> <!-- 동적 사이트명 -->
-                <td>{{ event.title }}</td> <!-- 행사명 -->
-                <td><img src="{{ event.image }}" alt="사이트 이미지"></td> <!-- 이미지 -->
-                <td>{{ event.period }}</td> <!-- 행사 기간 -->
-                <td><a href="{{ event.link }}" target="_blank">이동</a></td> <!-- 행사 링크 -->
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p style="text-align: center;">검색 결과가 없습니다.</p>
-    {% endif %}
-    <div class="back-btn">
-        <a href="/">다시 검색</a>
+    <div class="container">
+        <!-- ✅ 홈 버튼과 검색 결과 제목을 같은 줄에 배치 -->
+        <div class="header">
+            <a href="/" class="home-btn">홈으로</a>
+            <h1>검색 결과: "{{ query }}"</h1>
+        </div>
+
+        {% if events %}
+        <table>
+            <thead>
+                <tr>
+                    <th>사이트명</th>
+                    <th>행사명</th>
+                    <th>사이트 이미지</th>
+                    <th>행사 기간</th>
+                    <th>행사 링크</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in events %}
+                <tr>
+                    <td>{{ event.site }}</td> <!-- 동적 사이트명 -->
+                    <td>{{ event.title }}</td> <!-- 행사명 -->
+                    <td><img src="{{ event.image }}" alt="사이트 이미지"></td> <!-- 이미지 -->
+                    <td>{{ event.period }}</td> <!-- 행사 기간 -->
+                    <td><a href="{{ event.link }}" target="_blank">이동</a></td> <!-- 행사 링크 -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <p style="text-align: center;">검색 결과가 없습니다.</p>
+        {% endif %}
+        <div class="back-btn">
+            <a href="/">다시 검색</a>
+        </div>
     </div>
 </body>
 </html>
