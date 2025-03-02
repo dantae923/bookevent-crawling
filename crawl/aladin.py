@@ -15,7 +15,7 @@ def crawl_aladin_event_details(search_query):
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
         data = []
-        items = soup.select('table#Table1 tr')
+        items = soup.select('table#Table1')
 
         for item in items:
             link_tag = item.select_one("a.ml")
