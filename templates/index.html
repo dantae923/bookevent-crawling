@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,22 +10,15 @@
             margin: 20px;
             background-color: #f9f9f9;
         }
-        /* ✅ 테이블과 정렬을 맞추기 위해 margin-left 적용 */
         .container {
-            max-width: 800px;  /* 테이블과 일관성 유지 */
+            max-width: 900px;
             margin: 0 auto;
-            text-align: left;  /* 좌측 정렬 */
+            text-align: center;
         }
-        /* ✅ 홈 버튼과 제목을 같은 줄에 배치 */
         .header {
             display: flex;
             align-items: center;
-            justify-content: space-between; /* 버튼과 제목을 양쪽으로 배치 */
-            margin-bottom: 20px;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
+            justify-content: space-between;
             margin-bottom: 20px;
         }
         .home-btn {
@@ -41,86 +34,122 @@
         .home-btn:hover {
             background-color: #0056b3;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        /* ✅ 검색창 스타일 */
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .search-bar input {
+            width: 60%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+        .search-bar button {
+            padding: 10px 15px;
+            font-size: 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .search-bar button:hover {
+            background-color: #0056b3;
+        }
+        /* ✅ 카드형 UI 스타일 */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
             margin-top: 20px;
         }
-        th, td {
-            border: 1px solid #ddd;
+        .result-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            padding: 10px;
+            transition: transform 0.2s;
         }
-        th {
+        .result-card:hover {
+            transform: translateY(-5px);
+        }
+        /* ✅ 이미지 크기 고정 + 중앙 정렬 */
+        .image-container {
+            width: 260px;
+            height: 340px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin: 0 auto;
+            /*background-color: #f4f4f4; /* 배경색 추가 (이미지 크기 다를 때 대비) */
+            border-radius: 5px;
+        }
+        .result-card img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain; /* 비율 유지하며 중앙 정렬 */
+        }
+        .result-card h2 {
+            font-size: 16px;
+            color: #333;
+            margin: 10px 0;
+        }
+        .result-card p {
+            font-size: 14px;
+            color: #666;
+        }
+        .result-card a {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 12px;
             background-color: #007BFF;
             color: white;
-        }
-        td img {
-            max-width: 100px;
-            height: auto;
             border-radius: 5px;
-        }
-        a {
-            color: #007BFF;
             text-decoration: none;
-            font-weight: bold;
+            font-size: 14px;
         }
-        a:hover {
-            text-decoration: underline;
-        }
-        .back-btn {
-            margin-top: 20px;
-            text-align: center;
-        }
-        .back-btn a {
-            text-decoration: none;
-            color: #fff;
-            background-color: #007BFF;
-            padding: 10px 20px;
-            border-radius: 5px;
-        }
-        .back-btn a:hover {
+        .result-card a:hover {
             background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- ✅ 홈 버튼과 검색 결과 제목을 같은 줄에 배치 -->
+        <!-- ✅ 홈 버튼 -->
         <div class="header">
             <a href="/" class="home-btn">홈으로</a>
-            <h1>검색 결과: "{{ query }}"</h1>
         </div>
 
+        <!-- ✅ 검색 입력창 추가 -->
+        <form class="search-bar" method="POST" action="/">
+            <input type="text" name="search_query" placeholder="검색어를 입력하세요" required />
+            <button type="submit">검색</button>
+        </form>
+
         {% if events %}
-        <table>
-            <thead>
-                <tr>
-                    <th>사이트명</th>
-                    <th>행사명</th>
-                    <th>사이트 이미지</th>
-                    <th>행사 기간</th>
-                    <th>행사 링크</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for event in events %}
-                <tr>
-                    <td>{{ event.site }}</td> <!-- 동적 사이트명 -->
-                    <td>{{ event.title }}</td> <!-- 행사명 -->
-                    <td><img src="{{ event.image }}" alt="사이트 이미지"></td> <!-- 이미지 -->
-                    <td>{{ event.period }}</td> <!-- 행사 기간 -->
-                    <td><a href="{{ event.link }}" target="_blank">이동</a></td> <!-- 행사 링크 -->
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="results-grid">
+            {% for event in events %}
+            <div class="result-card">
+                <!-- ✅ 이미지 크기 고정 및 중앙 정렬 -->
+                <div class="image-container">
+                    <img src="{{ event.image }}" alt="사이트 이미지">
+                </div>
+                <h2>{{ event.title }}</h2>
+                <p><strong>사이트:</strong> {{ event.site }}</p>
+                <p><strong>기간:</strong> {{ event.period }}</p>
+                <a href="{{ event.link }}" target="_blank">이동</a>
+            </div>
+            {% endfor %}
+        </div>
         {% else %}
         <p style="text-align: center;">검색 결과가 없습니다.</p>
         {% endif %}
-        <div class="back-btn">
-            <a href="/">다시 검색</a>
-        </div>
     </div>
 </body>
 </html>
