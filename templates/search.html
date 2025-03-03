@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="ko">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 행사 검색 사이트</title>
     <style>
       body {
@@ -16,63 +16,78 @@
       }
       form {
         margin: 20px auto;
-        width: 300px;
+        width: 600px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
-      input[type="text"] {
+      /* ✅ 검색창 + 돋보기 버튼을 감싸는 컨테이너 */
+      .search-container {
+        display: flex;
         width: 100%;
-        padding: 10px;
-        font-size: 16px;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
         margin-bottom: 10px;
         border: 1px solid #ccc;
         border-radius: 5px;
+        overflow: hidden;
+        background-color: white;
       }
+      input[type="text"] {
+        flex: 1;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        outline: none;
+        background: none;
+      }
+      /* ✅ 돋보기 버튼 스타일 */
+      .search-button {
+        padding: 10px;
+        background-color: white;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .search-button img {
+        width: 20px;
+        height: 20px;
+      }
+      .search-button:hover {
+        background-color: #f0f0f0;
+      }
+      /* ✅ 사이트 체크박스 가로 정렬 */
       .site-options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 600px;
+        margin-top: 10px;
         text-align: left;
-        margin-bottom: 15px;
       }
       .site-options label {
-        display: block;
-        margin: 5px 0;
+        margin: 5px 10px;
         font-size: 14px;
-      }
-      .site-options input[type="checkbox"] {
-        margin-right: 5px;
-      }
-      button {
-        padding: 10px 20px;
-        font-size: 16px;
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-      button:hover {
-        background-color: #0056b3;
-      }
-      button:disabled {
-        background-color: #ccc;
-        cursor: not-allowed;
-        opacity: 0.6; /* 흐려지게 설정 */
-      }
-      button:disabled:hover {
-        background-color: #ccc; /* 마우스를 올려도 색상 변경 없음 */
+        white-space: nowrap;
       }
     </style>
     <script>
-      function toggleAllSites(source){
+      function toggleAllSites(source) {
         let checkboxes = document.querySelectorAll('.site-checkbox');
         checkboxes.forEach((checkbox) => {
           checkbox.checked = source.checked;
         });
       }
 
-      function checkAllSelected(){
+      function checkAllSelected() {
         let allCheckbox = document.getElementById("select-all");
         let checkboxes = document.querySelectorAll('.site-checkbox');
         let allChecked = true;
         checkboxes.forEach((checkbox) => {
-          if (!checkbox.checked){
+          if (!checkbox.checked) {
             allChecked = false;
           }
         });
@@ -81,69 +96,37 @@
 
       function disableSearchButton() {
         var btn = document.getElementById("searchBtn");
-        btn.disabled = true;  // 버튼 비활성화
-        btn.innerText = "검색 중...";  // 텍스트 변경
+        btn.disabled = true;
       }
     </script>
   </head>
   <body>
     <h1>도서명 검색</h1>
-    <form method="POST" action="/", onsubmit="disableSearchButton()">
-      <!-- 검색어 입력 필드 -->
-      <input
-        type="text"
-        name="search_query"
-        placeholder="검색어를 입력하세요"
-        required
-      />
-
-      <!-- 크롤링할 사이트 선택 영역 -->
-      <div class="site-options">
-        <p>원하는 사이트를 선택하세요:</p>
-        <label>
-          <input type="checkbox" id="select-all" onclick="toggleAllSites(this)" />
-          전체
-        </label>
-        <label>
-          <input type="checkbox" name="sites" value="yes24" class="site-checkbox" onclick="checkAllSelected()" />
-          예스24
-        </label>
-        <label>
-          <input type="checkbox" name="sites" value="kyobo" class="site-checkbox" onclick="checkAllSelected()" />
-          교보문고
-        </label>
-        <label>
-          <input type="checkbox" name="sites" value="aladin" class="site-checkbox" onclick="checkAllSelected()" />
-          알라딘
-        </label>
-        <label>
-          <input type="checkbox" name="sites" value="animate" class="site-checkbox" onclick="checkAllSelected()" />
-          애니메이트
-        </label>
-        <label>
-          <input type="checkbox" name="sites" value="daewon" class="site-checkbox" onclick="checkAllSelected()" />
-          대원씨아이
-        </label>
-        <label>
-          <input type="checkbox" name="sites" value="comiccity" class="site-checkbox" onclick="checkAllSelected()" />
-          코믹시티
-        </label>
-        <label>
-          <input type="checkbox" name="sites" value="bookculture" class="site-checkbox" onclick="checkAllSelected()" />
-          북컬쳐
-        </label>
-        <label>
-          <input type="checkbox" name="sites" value="comicgallery" class="site-checkbox" onclick="checkAllSelected()" />
-          코믹갤러리
-        </label>
-        <label>
-          <input type="checkbox" name="sites" value="comiczone" class="site-checkbox" onclick="checkAllSelected()" />
-          코믹존
-        </label>
+    <form method="POST" action="/" onsubmit="disableSearchButton()">
+      <!-- ✅ 검색창 + 돋보기 버튼 -->
+      <div class="search-container">
+        <input type="text" name="search_query" placeholder="검색어를 입력하세요" required />
+        <button type="submit" class="search-button">
+          <img src="https://cdn-icons-png.flaticon.com/512/622/622669.png" alt="검색">
+        </button>
       </div>
 
-      <!-- 검색 버튼 -->
-      <button type="submit" id="searchBtn">검색</button>
+      <!-- ✅ 사이트 체크박스 (가로 정렬) -->
+      <div class="site-options">
+        <label>
+          <input type="checkbox" id="select-all" onclick="toggleAllSites(this)" checked />
+            전체
+        </label>
+        <label><input type="checkbox" name="sites" value="yes24" class="site-checkbox" onclick="checkAllSelected()" checked /> 예스24</label>
+        <label><input type="checkbox" name="sites" value="kyobo" class="site-checkbox" onclick="checkAllSelected()" checked /> 교보문고</label>
+        <label><input type="checkbox" name="sites" value="aladin" class="site-checkbox" onclick="checkAllSelected()" checked /> 알라딘</label>
+        <label><input type="checkbox" name="sites" value="animate" class="site-checkbox" onclick="checkAllSelected()" checked /> 애니메이트</label>
+        <label><input type="checkbox" name="sites" value="daewon" class="site-checkbox" onclick="checkAllSelected()" checked /> 대원씨아이</label>
+        <label><input type="checkbox" name="sites" value="comiccity" class="site-checkbox" onclick="checkAllSelected()" checked /> 코믹시티</label>
+        <label><input type="checkbox" name="sites" value="bookculture" class="site-checkbox" onclick="checkAllSelected()" checked /> 북컬쳐</label>
+        <label><input type="checkbox" name="sites" value="comicgallery" class="site-checkbox" onclick="checkAllSelected()" checked /> 코믹갤러리</label>
+        <label><input type="checkbox" name="sites" value="comiczone" class="site-checkbox" onclick="checkAllSelected()" checked /> 코믹존</label>
+      </div>
     </form>
   </body>
 </html>
