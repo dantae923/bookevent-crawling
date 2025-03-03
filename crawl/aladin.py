@@ -26,7 +26,7 @@ def crawl_aladin_event_details(search_query):
             image_tag = item.select_one('img')
             image = image_tag["src"] if image_tag else "이미지 없음"
             period_tag = item.select_one('span.date')
-            period = period_tag.text.strip() if period_tag else "기간 정보 없음"
+            period = period_tag.text.strip().replace("기간 :", "") if period_tag else "기간 정보 없음"
 
             if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
                 data.append({
