@@ -4,76 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>도서 행사 검색 사이트</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        text-align: center;
-        padding: 50px;
-        background-color: #f4f4f9;
-      }
-      h1 {
-        color: #333;
-      }
-      form {
-        margin: 20px auto;
-        width: 600px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      /* ✅ 검색창 + 돋보기 버튼을 감싸는 컨테이너 */
-      .search-container {
-        display: flex;
-        width: 100%;
-        align-items: center;
-        justify-content: center;
-        gap: 0;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        overflow: hidden;
-        background-color: white;
-      }
-      input[type="text"] {
-        flex: 1;
-        padding: 10px;
-        font-size: 16px;
-        border: none;
-        outline: none;
-        background: none;
-      }
-      /* ✅ 돋보기 버튼 스타일 */
-      .search-button {
-        padding: 10px;
-        background-color: white;
-        border: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .search-button img {
-        width: 20px;
-        height: 20px;
-      }
-      .search-button:hover {
-        background-color: #f0f0f0;
-      }
-      /* ✅ 사이트 체크박스 가로 정렬 */
-      .site-options {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        max-width: 600px;
-        margin-top: 10px;
-        text-align: left;
-      }
-      .site-options label {
-        margin: 5px 10px;
-        font-size: 14px;
-        white-space: nowrap;
-      }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script>
       function toggleAllSites(source) {
         let checkboxes = document.querySelectorAll('.site-checkbox');
