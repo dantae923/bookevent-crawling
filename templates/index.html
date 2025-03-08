@@ -1,141 +1,67 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>검색 결과</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f9f9f9;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: center;
-        }
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .home-btn {
-            background-color: #007BFF;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: none;
-        }
-        .home-btn:hover {
-            background-color: #0056b3;
-        }
-        /* ✅ 검색창 스타일 */
-        .search-bar {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
-        }
-        .search-bar input {
-            width: 60%;
-            padding: 10px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-right: 10px;
-        }
-        .search-bar button {
-            padding: 10px 15px;
-            font-size: 16px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .search-bar button:hover {
-            background-color: #0056b3;
-        }
-        /* ✅ 카드형 UI 스타일 */
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개씩 고정 */
-            gap: 15px;
-            margin-top: 20px;
-            justify-items: center; /* 중앙 정렬 */
-        }
-        .result-card {
-            width: 260px; /* 카드 크기 고정 */
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            transition: transform 0.2s;
-        }   
+    <title>도서 행사 검색 사이트</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+      function toggleAllSites(source) {
+        let checkboxes = document.querySelectorAll('.site-checkbox');
+        checkboxes.forEach((checkbox) => {
+          checkbox.checked = source.checked;
+        });
+      }
 
-        .result-card:hover {
-            transform: translateY(-5px);
-        }
-        /* ✅ 이미지 크기 고정 + 중앙 정렬 */
-        .image-container {
-            width: 200px;
-            height: 260px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-            margin: 0 auto;
-            /*background-color: #f4f4f4; /* 배경색 추가 (이미지 크기 다를 때 대비) */
-            border-radius: 5px;
-        }
-        .result-card img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain; /* 비율 유지하며 중앙 정렬 */
-        }
-        .result-card h2 {
-            font-size: 16px;
-            color: #333;
-            margin: 10px 0;
-        }
-        .result-card p {
-            font-size: 14px;
-            color: #666;
-        }
-        .result-card a {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 12px;
-            background-color: #007BFF;
-            color: white;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .result-card a:hover {
-            background-color: #0056b3;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- ✅ 홈 버튼 -->
-        <div class="header">
-            <a href="/" class="home-btn">홈으로</a>
-        </div>
+      function checkAllSelected() {
+        let allCheckbox = document.getElementById("select-all");
+        let checkboxes = document.querySelectorAll('.site-checkbox');
+        let allChecked = true;
+        checkboxes.forEach((checkbox) => {
+          if (!checkbox.checked) {
+            allChecked = false;
+          }
+        });
+        allCheckbox.checked = allChecked;
+      }
 
-        <!-- ✅ 검색 입력창 추가 -->
-        <form class="search-bar" method="POST" action="/">
-            <input type="text" name="search_query" placeholder="검색어를 입력하세요" required />
-            <button type="submit">검색</button>
-        </form>
+      function disableSearchButton() {
+        var btn = document.getElementById("searchBtn");
+        btn.disabled = true;
+      }
+    </script>
+  </head>
+  <body>
+    <h1>도서명 검색</h1>
+    <form method="POST" action="/" onsubmit="disableSearchButton()">
+      <!-- ✅ 검색창 + 돋보기 버튼 -->
+      <div class="search-container">
+        <input type="text" name="search_query" placeholder="검색어를 입력하세요" required />
+        <button type="submit" class="search-button">
+          <img src="https://cdn-icons-png.flaticon.com/512/622/622669.png" alt="검색">
+        </button>
+      </div>
 
-        {% if events %}
+      <!-- ✅ 사이트 체크박스 (가로 정렬) -->
+      <div class="site-options">
+        <label>
+          <input type="checkbox" id="select-all" onclick="toggleAllSites(this)" checked />
+            전체
+        </label>
+        <label><input type="checkbox" name="sites" value="yes24" class="site-checkbox" onclick="checkAllSelected()" checked /> 예스24</label>
+        <label><input type="checkbox" name="sites" value="kyobo" class="site-checkbox" onclick="checkAllSelected()" checked /> 교보문고</label>
+        <label><input type="checkbox" name="sites" value="aladin" class="site-checkbox" onclick="checkAllSelected()" checked /> 알라딘</label>
+        <label><input type="checkbox" name="sites" value="animate" class="site-checkbox" onclick="checkAllSelected()" checked /> 애니메이트</label>
+        <label><input type="checkbox" name="sites" value="daewon" class="site-checkbox" onclick="checkAllSelected()" checked /> 대원씨아이</label>
+        <label><input type="checkbox" name="sites" value="comiccity" class="site-checkbox" onclick="checkAllSelected()" checked /> 코믹시티</label>
+        <label><input type="checkbox" name="sites" value="bookculture" class="site-checkbox" onclick="checkAllSelected()" checked /> 북컬쳐</label>
+        <label><input type="checkbox" name="sites" value="comicgallery" class="site-checkbox" onclick="checkAllSelected()" checked /> 코믹갤러리</label>
+        <label><input type="checkbox" name="sites" value="comiczone" class="site-checkbox" onclick="checkAllSelected()" checked /> 코믹존</label>
+      </div>
+
+      <!-- ✅ 데이터 영역 -->
+      {% if events %}
+      <div class="container">
         <div class="results-grid">
             {% for event in events %}
             <div class="result-card">
@@ -154,5 +80,6 @@
         <p style="text-align: center;">검색 결과가 없습니다.</p>
         {% endif %}
     </div>
-</body>
+    </form>
+  </body>
 </html>

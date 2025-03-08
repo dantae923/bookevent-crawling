@@ -15,7 +15,7 @@ def home():
 
         return render_template('index.html', events=events, query=search_query)
     
-    return render_template('search.html')
+    return render_template('index.html')
 
 
 if __name__ == "__main__":
