@@ -28,7 +28,16 @@
       function disableSearchButton() {
         var btn = document.getElementById("searchBtn");
         btn.disabled = true;
+        btn.style.opacity = "0.5";
       }
+
+      window.onload = function() {
+        var btn = document.getElementById("searchBtn");
+        if (btn) {
+            btn.disabled = false;
+            btn.style.opacity = "1";
+        }
+      };
     </script>
   </head>
   <body>
@@ -37,7 +46,7 @@
       <!-- ✅ 검색창 + 돋보기 버튼 -->
       <div class="search-container">
         <input type="text" name="search_query" placeholder="검색어를 입력하세요" required />
-        <button type="submit" class="search-button">
+        <button type="submit" id="searchBtn" class="search-button">
           <img src="https://cdn-icons-png.flaticon.com/512/622/622669.png" alt="검색">
         </button>
       </div>
