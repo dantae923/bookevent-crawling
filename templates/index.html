@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>도서 행사 검색 사이트</title>
+    <title>카구라바치 특전 보기</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <script>
       function toggleAllSites(source) {
@@ -41,11 +41,19 @@
     </script>
   </head>
   <body>
-    <h1>도서명 검색</h1>
+    <h1>
+        {% if not query or query.strip() == "" %}
+            카구라바치 특전 모아보기
+        {% elif "카구라바치" in query %}
+            카구라바치 특전 모아보기
+        {% else %}
+            카구라바치로 검색하라니까?
+        {% endif %}
+    </h1>
     <form method="POST" action="/" onsubmit="disableSearchButton()">
       <!-- ✅ 검색창 + 돋보기 버튼 -->
       <div class="search-container">
-        <input type="text" name="search_query" placeholder="검색어를 입력하세요" required />
+        <input type="text" name="search_query" placeholder="카구라바치" required />
         <button type="submit" id="searchBtn" class="search-button">
           <img src="https://cdn-icons-png.flaticon.com/512/622/622669.png" alt="검색">
         </button>
@@ -86,7 +94,7 @@
             {% endfor %}
         </div>
         {% else %}
-        <p style="text-align: center;">검색 결과가 없습니다.</p>
+        <p style="text-align: center;">↑ 검색창 따라 쓰세요.</p>
         {% endif %}
     </div>
     </form>
