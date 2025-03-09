@@ -79,20 +79,23 @@
       <!-- ✅ 데이터 영역 -->
       {% if events %}
       <div class="container">
-        <div class="results-grid">
-            {% for event in events %}
-            <div class="result-card">
-                <!-- ✅ 이미지 크기 고정 및 중앙 정렬 -->
-                <div class="image-container">
-                    <img src="{{ event.image }}" alt="사이트 이미지">
-                </div>
-                <h2>{{ event.title }}</h2>
-                <p><strong>사이트:</strong> {{ event.site }}</p>
-                <p><strong>기간:</strong> {{ event.period }}</p>
-                <a href="{{ event.link }}" target="_blank">이동</a>
-            </div>
-            {% endfor %}
-        </div>
+        <div class="results-list">
+          {% for event in events %}
+          <div class="event-item">
+              <!-- ✅ 이미지 왼쪽 정렬 -->
+              <div class="event-image">
+                  <img src="{{ event.image }}" alt="행사 이미지">
+              </div>
+              <!-- ✅ 행사 정보 -->
+              <div class="event-info">
+                  <h2>{{ event.title }}</h2>
+                  <p><strong>사이트:</strong> {{ event.site }}</p>
+                  <p><strong>기간:</strong> {{ event.period }}</p>
+                  <a href="{{ event.link }}" target="_blank" class="event-link">행사 바로가기</a>
+              </div>
+          </div>
+          {% endfor %}
+      </div>
         {% else %}
         <p style="text-align: center;">↑ 검색창 따라 쓰세요.</p>
         {% endif %}
