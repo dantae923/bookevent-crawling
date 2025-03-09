@@ -1,30 +1,19 @@
+/* ✅ 전체 페이지 정렬 */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
     padding: 50px;
-    background-color: #f4f4f9;
-}
-
-h1 {
-    color: #333;
-}
-
-form {
-    margin: 20px auto;
-    width: 600px;
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* ✅ 검색창 + 돋보기 버튼을 감싸는 컨테이너 */
+/* ✅ 검색창 크기를 600px로 설정 */
 .search-container {
     display: flex;
-    width: 100%;
+    width: 600px;
     align-items: center;
-    justify-content: center;
-    gap: 0;
-    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     overflow: hidden;
@@ -40,7 +29,6 @@ input[type="text"] {
     background: none;
 }
 
-/* ✅ 돋보기 버튼 스타일 */
 .search-button {
     padding: 10px;
     background-color: white;
@@ -60,113 +48,52 @@ input[type="text"] {
     background-color: #f0f0f0;
 }
 
-/* ✅ 사이트 체크박스 가로 정렬 */
-.site-options {
+/* ✅ 전체 레이아웃 (필터 + 검색 결과) */
+.container {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    max-width: 600px;
-    margin-top: 10px;
+    align-items: flex-start;
+    max-width: 1000px;
+    margin-top: 30px;
+    gap: 30px;
+}
+
+/* ✅ 왼쪽 필터 */
+.site-options {
+    width: 200px;
+    padding: 15px;
+    background: white;
     text-align: left;
 }
 
-.site-options label {
-    margin: 5px 10px;
-    font-size: 14px;
-    white-space: nowrap;
-}
-
-/* ✅ 카드형 UI 스타일 */
-.results-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 한 줄에 3개씩 고정 */
-    gap: 15px;
-    margin-top: 20px;
-    justify-items: center; /* 중앙 정렬 */
-}
-
-.result-card {
-    width: 260px; /* 카드 크기 고정 */
-    background: white;
-    border-radius: 8px;
-    padding: 15px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    transition: transform 0.2s;
-}   
-
-.result-card:hover {
-    transform: translateY(-5px);
-}
-
-/* ✅ 이미지 크기 고정 + 중앙 정렬 */
-.image-container {
-    width: 200px;
-    height: 260px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    margin: 0 auto;
-    /*background-color: #f4f4f4; /* 배경색 추가 (이미지 크기 다를 때 대비) */
-    border-radius: 5px;
-}
-
-.result-card img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain; /* 비율 유지하며 중앙 정렬 */
-}
-
-.result-card h2 {
-    font-size: 16px;
+.site-options h3 {
+    font-size: 18px;
     color: #333;
-    margin: 10px 0;
+    margin-bottom: 10px;
 }
 
-.result-card p {
+.site-options label {
+    display: block;
+    margin: 5px 0;
     font-size: 14px;
-    color: #666;
+    cursor: pointer;
 }
 
-.result-card a {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 12px;
-    background-color: #007BFF;
-    color: white;
-    border-radius: 5px;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.result-card a:hover {
-    background-color: #0056b3;
-}
-
-/* ✅ 세로 리스트 스타일 */
+/* ✅ 검색 결과 리스트 */
 .results-list {
-    max-width: 800px;
-    margin: 20px auto;
+    width: 600px;
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-/* ✅ 각 행사 항목 디자인 */
+/* ✅ 개별 행사 항목 */
 .event-item {
     display: flex;
     align-items: center;
     background: white;
     padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border-left: 5px solid #007BFF; /* 좌측 포인트 컬러 */
     transition: transform 0.2s;
-}
-
-.event-item:hover {
-    transform: translateY(-2px);
 }
 
 /* ✅ 행사 이미지 */
@@ -179,7 +106,7 @@ input[type="text"] {
     justify-content: center;
     overflow: hidden;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: white;
     margin-right: 15px;
 }
 
@@ -196,7 +123,7 @@ input[type="text"] {
 }
 
 .event-info h2 {
-    font-size: 18px;
+    font-size: 15px;
     color: #333;
     margin: 5px 0;
 }
@@ -207,18 +134,13 @@ input[type="text"] {
     margin: 3px 0;
 }
 
-/* ✅ 행사 링크 버튼 */
-.event-link {
-    display: inline-block;
-    margin-top: 8px;
-    padding: 6px 12px;
-    background-color: #007BFF;
-    color: white;
-    border-radius: 5px;
+/* ✅ 제목 클릭 가능 */
+.event-title-link {
+    color: #007BFF;
     text-decoration: none;
-    font-size: 14px;
+    font-weight: bold;
 }
 
-.event-link:hover {
-    background-color: #0056b3;
+.event-title-link:hover {
+    text-decoration: underline;
 }

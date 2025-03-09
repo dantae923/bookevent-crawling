@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
-  <head>
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>카구라바치 특전 보기</title>
@@ -34,72 +34,64 @@
       window.onload = function() {
         var btn = document.getElementById("searchBtn");
         if (btn) {
-            btn.disabled = false;
-            btn.style.opacity = "1";
+          btn.disabled = false;
+          btn.style.opacity = "1";
         }
       };
     </script>
-  </head>
-  <body>
+</head>
+<body>
     <h1>
-        {% if not query or query.strip() == "" %}
-            카구라바치 특전 모아보기
-        {% elif "카구라바치" in query %}
-            카구라바치 특전 모아보기
-        {% else %}
-            카구라바치로 검색하라니까?
-        {% endif %}
+      {% if not query or query.strip() == "" %}
+        카구라바치 특전 모아보기
+      {% elif "카구라바치" in query %}
+        카구라바치 특전 모아보기
+      {% else %}
+        카구라바치로 검색하라니까?
+      {% endif %}
     </h1>
+    
     <form method="POST" action="/" onsubmit="disableSearchButton()">
-      <!-- ✅ 검색창 + 돋보기 버튼 -->
+      <!-- ✅ 검색창 -->
       <div class="search-container">
         <input type="text" name="search_query" placeholder="카구라바치" required />
         <button type="submit" id="searchBtn" class="search-button">
           <img src="https://cdn-icons-png.flaticon.com/512/622/622669.png" alt="검색">
         </button>
       </div>
-
-      <!-- ✅ 사이트 체크박스 (가로 정렬) -->
-      <div class="site-options">
-        <label>
-          <input type="checkbox" id="select-all" onclick="toggleAllSites(this)" checked />
-            전체
-        </label>
-        <label><input type="checkbox" name="sites" value="yes24" class="site-checkbox" onclick="checkAllSelected()" checked /> 예스24</label>
-        <label><input type="checkbox" name="sites" value="kyobo" class="site-checkbox" onclick="checkAllSelected()" checked /> 교보문고</label>
-        <label><input type="checkbox" name="sites" value="aladin" class="site-checkbox" onclick="checkAllSelected()" checked /> 알라딘</label>
-        <label><input type="checkbox" name="sites" value="animate" class="site-checkbox" onclick="checkAllSelected()" checked /> 애니메이트</label>
-        <label><input type="checkbox" name="sites" value="daewon" class="site-checkbox" onclick="checkAllSelected()" checked /> 대원씨아이</label>
-        <label><input type="checkbox" name="sites" value="comiccity" class="site-checkbox" onclick="checkAllSelected()" checked /> 코믹시티</label>
-        <label><input type="checkbox" name="sites" value="bookculture" class="site-checkbox" onclick="checkAllSelected()" checked /> 북컬쳐</label>
-        <label><input type="checkbox" name="sites" value="comicgallery" class="site-checkbox" onclick="checkAllSelected()" checked /> 코믹갤러리</label>
-        <label><input type="checkbox" name="sites" value="comiczone" class="site-checkbox" onclick="checkAllSelected()" checked /> 코믹존</label>
-      </div>
-
-      <!-- ✅ 데이터 영역 -->
-      {% if events %}
-      <div class="container">
-        <div class="results-list">
-          {% for event in events %}
-          <div class="event-item">
-              <!-- ✅ 이미지 왼쪽 정렬 -->
-              <div class="event-image">
-                  <img src="{{ event.image }}" alt="행사 이미지">
-              </div>
-              <!-- ✅ 행사 정보 -->
-              <div class="event-info">
-                  <h2>{{ event.title }}</h2>
-                  <p><strong>사이트:</strong> {{ event.site }}</p>
-                  <p><strong>기간:</strong> {{ event.period }}</p>
-                  <a href="{{ event.link }}" target="_blank" class="event-link">행사 바로가기</a>
-              </div>
-          </div>
-          {% endfor %}
-      </div>
-        {% else %}
-        <p style="text-align: center;">↑ 검색창 따라 쓰세요.</p>
-        {% endif %}
-    </div>
     </form>
-  </body>
+
+    <!-- ✅ 전체 레이아웃 -->
+    <div class="container">
+        <!-- ✅ 왼쪽 필터 영역 -->
+        <div class="site-options">
+            <label><input type="checkbox" id="select-all" onclick="toggleAllSites(this)" checked /> 전체</label>
+            {% for site in ["yes24", "kyobo", "aladin", "animate", "daewon", "comiccity", "bookculture", "comicgallery", "comiczone"] %}
+            <label>
+                <input type="checkbox" class="site-checkbox" value="{{ site }}" checked />
+                {{ site | capitalize }}
+            </label>
+            {% endfor %}
+        </div>
+
+        <!-- ✅ 검색 결과 리스트 -->
+        <div class="results-list">
+            {% if events %}
+            {% for event in events %}
+            <div class="event-item">
+                <div class="event-image">
+                    <img src="{{ event.image }}" alt="행사 이미지">
+                </div>
+                <div class="event-info">
+                    <h2><a href="{{ event.link }}" target="_blank" class="event-title-link">{{ event.title }}</a></h2>
+                    <p><strong>사이트:</strong> {{ event.site }}</p>
+                </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <p style="text-align: center;">↑ 검색창 따라 쓰세요.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
 </html>
