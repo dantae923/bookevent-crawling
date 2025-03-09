@@ -5,7 +5,7 @@ from datetime import datetime
 def crawl_aladin_event_details(search_query):
     start_time = datetime.now()
     print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] 알라딘 크롤링 시작")
-    url = "https://www.aladin.co.kr/events/wevent_sub.aspx?CID=2551"
+    url = "https://smartstore.naver.com/comicmall/search?q={search_query}"
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101 Firefox/102.0"
     }
