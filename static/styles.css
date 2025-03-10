@@ -94,6 +94,7 @@ input[type="text"] {
     background: white;
     padding: 15px;
     transition: transform 0.2s;
+    border-bottom: 1px solid #ccc;  /* 연한 회색 선 */
 }
 
 /* ✅ 행사 이미지 */
