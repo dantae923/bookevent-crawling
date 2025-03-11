@@ -1,7 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+from database import insert_event  # ✅ 공통 DB 함수 불러오기
 
+# ✅ 1️⃣ 예스24 크롤링 함수 (DB 저장 포함)
 def crawl_yes24_event_details(search_query):
     start_time = datetime.now()
     print(f"[{start_time.strftime('%Y-%m-%d %H:%M:%S')}] 예스24 크롤링 시작")
@@ -30,15 +32,18 @@ def crawl_yes24_event_details(search_query):
             period = period_tag.text.strip() if period_tag else "기간 정보 없음"
 
             if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
-                data.append({
-                    'site': '예스24',
-                    'link': link,
-                    'title': title,
-                    'image': image,
-                    'period': period
-                })
+                insert_event('예스24', title, link, image, period)  # ✅ DB 저장
 
-        return data
+            # if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
+            #     data.append({
+            #         'site': '예스24',
+            #         'link': link,
+            #         'title': title,
+            #         'image': image,
+            #         'period': period
+            #     })
+
+        # return data
     except Exception as e:
         print(f"크롤링 중 오류 발생: {e}")
         return []
