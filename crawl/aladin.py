@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+from database import insert_event  # ✅ 공통 DB 함수 불러오기
 
 def crawl_aladin_event_details(search_query):
     start_time = datetime.now()
@@ -29,15 +30,16 @@ def crawl_aladin_event_details(search_query):
             period = period_tag.text.strip().replace("기간 :", "") if period_tag else "기간 정보 없음"
 
             if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
-                data.append({
-                    'site': '알라딘',
-                    'link': link,
-                    'title': title,
-                    'image': image,
-                    'period': period
-                })
+                insert_event('알라딘', title, link, image, period)  # ✅ DB 저장
+                # data.append({
+                #     'site': '알라딘',
+                #     'link': link,
+                #     'title': title,
+                #     'image': image,
+                #     'period': period
+                # })
 
-        return data
+        #return data
     except Exception as e:
         print(f"크롤링 중 오류 발생: {e}")
         return []

@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+from database import insert_event  # ✅ 공통 DB 함수 불러오기
 
 def crawl_animate_event_details(search_query, filter_special=True, exclude_soldout=True):
     start_time = datetime.now()
@@ -52,14 +53,15 @@ def crawl_animate_event_details(search_query, filter_special=True, exclude_soldo
             image = image_tag["src"] if image_tag else "이미지 없음"
 
             if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
-                data.append({
-                    'site': '애니메이트',
-                    'link': link,
-                    'title': title,
-                    'image': image
-                })
+                insert_event('애니메이트', title, link, image, '')  # ✅ DB 저장
+                # data.append({
+                #     'site': '애니메이트',
+                #     'link': link,
+                #     'title': title,
+                #     'image': image
+                # })
         
-        return data
+        #return data
     except Exception as e:
         print(f"크롤링 중 오류 발생: {e}")
         return []

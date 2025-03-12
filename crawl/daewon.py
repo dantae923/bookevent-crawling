@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
+from database import insert_event  # ✅ 공통 DB 함수 불러오기
 
 def crawl_daewon_event_details(search_query):
     start_time = datetime.now()
@@ -26,12 +27,13 @@ def crawl_daewon_event_details(search_query):
             image = title_image_tag["src"] if title_image_tag else "이미지 없음"
 
             if title != '제목 없음' and search_query.replace(" ", "") in title.replace(" ", ""):
-                data.append({
-                    'site': '대원씨아이',
-                    'link': link,
-                    'title': title,
-                    'image': image
-                })
+                insert_event('대원씨아이', title, link, image, '')  # ✅ DB 저장
+                # data.append({
+                #     'site': '대원씨아이',
+                #     'link': link,
+                #     'title': title,
+                #     'image': image
+                # })
 
         return data
     except Exception as e:

@@ -1,7 +1,13 @@
-#from crawl import crawl_all_events
 from flask import Flask, render_template, request
 from database import init_db, get_events  # ✅ DB 초기화 & 조회 함수
 from crawl import crawl_yes24_event_details
+from crawl import crawl_aladin_event_details
+from crawl import crawl_animate_event_details
+from crawl import crawl_bookculture_event_details
+from crawl import crawl_comiccity_event_details
+from crawl import crawl_comicgallery_event_details
+from crawl import crawl_comiczone_event_details
+from crawl import crawl_daewon_event_details
 
 app = Flask(__name__)
 
@@ -9,6 +15,13 @@ app = Flask(__name__)
 init_db()
 print("📢 초기 크롤링 실행 중...")
 crawl_yes24_event_details("카구라바치")  # 기본 검색어 크롤링
+crawl_aladin_event_details("카구라바치")
+crawl_animate_event_details("카구라바치")
+crawl_bookculture_event_details("카구라바치")
+crawl_comiccity_event_details("카구라바치")
+crawl_comicgallery_event_details("카구라바치")
+crawl_comiczone_event_details("카구라바치")
+crawl_daewon_event_details("카구라바치")
 print("✅ 초기 크롤링 완료! 데이터 저장됨.")
 
 # ✅ 메인 페이지 (DB에서 데이터 가져와서 표시)
